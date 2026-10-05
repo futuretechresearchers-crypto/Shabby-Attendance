@@ -1,0 +1,11 @@
+START HERE — LARAGON
+
+1. Extract this ZIP into C:\laragon\www\
+2. Keep the folder name attendance_system_revised (or rename it; links are now automatic).
+3. Start Apache and MySQL in Laragon.
+4. Import database.sql into MySQL/MariaDB.
+5. Open: http://localhost/attendance_system_revised/
+6. You should be redirected to the Login page, NOT an Apache directory listing.
+7. Login: admin / admin123
+
+If you still see an Apache "Index of /..." page, make sure index.php is directly inside the project folder and Apache is running.

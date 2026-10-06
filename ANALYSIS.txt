@@ -76,5 +76,3 @@ The revised system rejects:
 The shabby version demonstrates what can happen when a system is made only to "work."
 The revised version applies the four required quality characteristics:
 Acceptability, Dependability & Security, Efficiency, and Maintainability.
-
-The laboratory still requires before/after evidence and problem analysis for submission. This ZIP is provided so the revised implementation can be compared directly with the shabby version.

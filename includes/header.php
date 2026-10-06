@@ -16,11 +16,4 @@ require_once __DIR__ . "/../config/database.php";
 <div class="app-shell">
     <?php require __DIR__ . "/sidebar.php"; ?>
     <div class="dashboard-main">
-        <header class="dashboard-topbar">
-            <h2><?= htmlspecialchars($pageTitle) ?></h2>
-            <div class="topbar-user">
-                <span class="user-avatar" aria-hidden="true"><?= htmlspecialchars(strtoupper(substr($_SESSION['username'] ?? 'A', 0, 1))) ?></span>
-                <span class="topbar-username"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></span>
-            </div>
-        </header>
         <main class="container dashboard-container">

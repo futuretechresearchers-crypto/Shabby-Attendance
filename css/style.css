@@ -1,20 +1,20 @@
 :root {
     color-scheme: light;
-    --color-navy: #701A45;
-    --color-blue: #9D174D;
-    --color-blue-dark: #701A45;
-    --color-blue-light: #FDF2F8;
+    --color-navy: #0A5C36;
+    --color-blue: #0A5C36;
+    --color-blue-dark: #06452A;
+    --color-blue-light: #EAF5EF;
     --color-white: #FFFFFF;
-    --color-page: #FDF2F8;
+    --color-page: #F5FAF6;
     --color-text: #292524;
     --color-muted: #78716C;
-    --color-rose: #BE5A8A;
-    --color-rose-soft: #E7B4CA;
+    --color-rose: #2F8F5B;
+    --color-rose-soft: #B9DEC8;
     --color-success: #15803D;
     --color-danger: #B91C1C;
-    --color-border: #E5D5DE;
-    --shadow-card: 0 4px 14px rgba(112, 26, 69, .06);
-    --shadow-card-hover: 0 10px 24px rgba(112, 26, 69, .11);
+    --color-border: #D5E4DA;
+    --shadow-card: 0 4px 14px rgba(10, 92, 54, .06);
+    --shadow-card-hover: 0 10px 24px rgba(10, 92, 54, .11);
 }
 
 * {
@@ -200,7 +200,7 @@ select {
     min-height: 42px;
     padding: 9px 12px;
     margin-bottom: 17px;
-    border: 1px solid #D6C3CC;
+    border: 1px solid var(--color-border);
     border-radius: 7px;
     background: var(--color-white);
     color: var(--color-text);
@@ -222,7 +222,7 @@ input:focus,
 select:focus,
 button:focus-visible,
 a:focus-visible {
-    outline: 3px solid rgba(157, 23, 77, .28);
+    outline: 3px solid rgba(10, 92, 54, .28);
     outline-offset: 2px;
 }
 
@@ -232,7 +232,7 @@ a:focus-visible {
     align-items: center;
     justify-content: center;
     padding: 8px 15px;
-    border: 1px solid #D6C3CC;
+    border: 1px solid var(--color-border);
     border-radius: 7px;
     background: var(--color-white);
     color: var(--color-text);
@@ -246,8 +246,8 @@ a:focus-visible {
 }
 
 .button:hover {
-    border-color: #C9A8B7;
-    background: #FFF9FC;
+    border-color: var(--color-rose-soft);
+    background: #F5FAF6;
     color: var(--color-text);
     text-decoration: none;
 }
@@ -266,13 +266,13 @@ a:focus-visible {
 
 .button.secondary {
     border-color: var(--color-border);
-    background: #FDF2F8;
+    background: var(--color-blue-light);
     color: var(--color-text);
 }
 
 .button.secondary:hover {
     border-color: var(--color-rose-soft);
-    background: #FCE7F3;
+    background: #EAF5EF;
 }
 
 .button.danger {
@@ -339,7 +339,7 @@ a:focus-visible {
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(112, 26, 69, .035);
+    box-shadow: 0 2px 8px rgba(10, 92, 54, .035);
 }
 
 table {
@@ -370,11 +370,11 @@ tbody tr {
 }
 
 tbody tr:nth-child(even) {
-    background: #FFFBFD;
+    background: #FBFDFB;
 }
 
 tbody tr:hover {
-    background: #FDF2F8;
+    background: var(--color-blue-light);
 }
 
 tbody tr:last-child td {
@@ -477,7 +477,7 @@ td select {
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, .22);
     border-radius: 18px;
-    box-shadow: 0 24px 70px rgba(41, 10, 27, .3);
+    box-shadow: 0 24px 70px rgba(5, 45, 26, .3);
 }
 
 .login-brand-panel {
@@ -488,7 +488,7 @@ td select {
     min-height: 100%;
     padding: 48px 42px;
     overflow: hidden;
-    background: linear-gradient(150deg, #701A45 0%, #861746 54%, #9D174D 100%);
+    background: linear-gradient(150deg, #0A5C36 0%, #087447 54%, #13814E 100%);
     color: var(--color-white);
 }
 
@@ -502,7 +502,7 @@ td select {
 
 .login-brand-panel::before {
     inset: 0;
-    background: rgba(190, 90, 138, .5);
+    background: rgba(47, 143, 91, .5);
     clip-path: polygon(0 0, 82% 0, 0 45%);
 }
 
@@ -511,7 +511,7 @@ td select {
     bottom: -24%;
     width: 108%;
     height: 72%;
-    background: rgba(231, 180, 202, .20);
+    background: rgba(185, 222, 200, .20);
     clip-path: polygon(0 0, 100% 75%, 100% 100%, 25% 100%);
 }
 
@@ -535,7 +535,7 @@ td select {
     border: 1px solid rgba(255, 255, 255, .55);
     border-radius: 18px;
     background: rgba(255, 255, 255, .14);
-    box-shadow: 0 8px 22px rgba(41, 10, 27, .18);
+    box-shadow: 0 8px 22px rgba(5, 45, 26, .18);
     color: var(--color-white);
 }
 
@@ -546,7 +546,7 @@ td select {
 
 .login-brand-eyebrow {
     margin: 0 0 12px;
-    color: #FCE7F3;
+    color: #EAF5EF;
     font-size: .76rem;
     font-weight: 700;
     letter-spacing: .14em;
@@ -618,7 +618,7 @@ td select {
 
 .login-content input:focus {
     border-color: var(--color-blue);
-    box-shadow: 0 0 0 3px rgba(157, 23, 77, .10);
+    box-shadow: 0 0 0 3px rgba(10, 92, 54, .10);
 }
 
 .login-content .button {
@@ -788,17 +788,19 @@ td select {
 
 .app-shell {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
 }
 
 .dashboard-sidebar {
-    position: fixed;
-    inset: 0 auto 0 0;
+    position: sticky;
+    top: 0;
     z-index: 5;
     display: flex;
-    width: 250px;
-    flex-direction: column;
-    padding: 27px 17px 22px;
+    width: 100%;
+    align-items: center;
+    gap: 24px;
+    padding: 12px clamp(22px, 4vw, 56px);
     background: var(--color-navy);
     color: var(--color-white);
 }
@@ -807,7 +809,8 @@ td select {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 0 10px 29px;
+    flex: 0 0 auto;
+    padding: 0;
     color: var(--color-white);
     text-decoration: none;
     font-size: 1.02rem;
@@ -836,13 +839,15 @@ td select {
 }
 
 .sidebar-nav {
-    display: grid;
-    width: 100%;
+    display: flex;
+    width: auto;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
     gap: 7px;
 }
 
-.sidebar-nav a,
-.sidebar-logout {
+.sidebar-nav a {
     display: flex;
     min-height: 45px;
     align-items: center;
@@ -856,16 +861,14 @@ td select {
     transition: background-color .16s ease, color .16s ease, transform .16s ease;
 }
 
-.sidebar-nav a > span,
-.sidebar-logout > span {
+.sidebar-nav a > span {
     display: grid;
     width: 20px;
     place-items: center;
     font-size: 1.05rem;
 }
 
-.sidebar-nav a:hover,
-.sidebar-logout:hover {
+.sidebar-nav a:hover {
     background: rgba(255, 255, 255, .12);
     color: var(--color-white);
     text-decoration: none;
@@ -877,42 +880,61 @@ td select {
     font-weight: 700;
 }
 
-.sidebar-logout {
-    margin-top: auto;
-}
-
 .dashboard-main {
-    width: calc(100% - 250px);
+    width: 100%;
     min-width: 0;
     min-height: 100vh;
-    margin-left: 250px;
+    margin-left: 0;
 }
 
-.dashboard-topbar {
-    display: flex;
-    min-height: 72px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    padding: 13px clamp(22px, 4vw, 56px);
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-white);
-}
-
-.dashboard-topbar h2 {
-    margin: 0;
-    color: var(--color-text);
-    font-size: 1.08rem;
-    font-weight: 650;
+.topbar-profile {
+    position: relative;
+    margin-left: auto;
+    flex: 0 0 auto;
 }
 
 .topbar-user {
     display: flex;
     align-items: center;
     gap: 11px;
-    color: var(--color-text);
+    list-style: none;
+    color: var(--color-white);
     font-size: .9rem;
     font-weight: 600;
+    cursor: pointer;
+}
+
+.topbar-user::-webkit-details-marker {
+    display: none;
+}
+
+.topbar-user::after {
+    color: rgba(255, 255, 255, .72);
+    content: "▾";
+    font-size: .75rem;
+}
+
+.profile-menu-logout {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 10;
+    min-width: 150px;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-white);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: .88rem;
+    font-weight: 600;
+}
+
+.profile-menu-logout:hover {
+    background: var(--color-blue-light);
+    color: var(--color-navy);
+    text-decoration: none;
 }
 
 .user-avatar {
@@ -921,19 +943,11 @@ td select {
     height: 36px;
     place-items: center;
     border-radius: 50%;
-    background: var(--color-blue-light);
-    color: var(--color-blue);
+    background: rgba(255, 255, 255, .16);
+    color: var(--color-white);
     font-weight: 700;
 }
 
-.topbar-user a {
-    margin-left: 8px;
-    color: var(--color-blue);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.topbar-user a:hover,
 .panel-link:hover {
     color: var(--color-navy);
     text-decoration: underline;
@@ -1168,7 +1182,7 @@ td select {
     height: 7px;
     overflow: hidden;
     border-radius: 10px;
-    background: #F5EDF1;
+    background: #EEF5F0;
 }
 
 .overview-fill {
@@ -1233,7 +1247,7 @@ td select {
     align-items: flex-end;
     justify-content: center;
     border-bottom: 1px solid var(--color-border);
-    background: repeating-linear-gradient(to bottom, transparent 0, transparent 39px, #F3E9EE 40px);
+    background: repeating-linear-gradient(to bottom, transparent 0, transparent 39px, #E7EFE9 40px);
 }
 
 .trend-bar {
@@ -1243,7 +1257,7 @@ td select {
     flex-direction: column;
     overflow: hidden;
     border-radius: 6px 6px 2px 2px;
-    background: #F5EDF1;
+    background: #EEF5F0;
     transition: height .2s ease;
 }
 
@@ -1300,7 +1314,7 @@ td select {
 }
 
 .recent-table tbody tr:hover {
-    background: #FFFBFD;
+    background: #FBFDFB;
 }
 
 .recent-table .empty {
@@ -1330,7 +1344,7 @@ td select {
 }
 
 .status-badge.late {
-    background: #FCE7F3;
+    background: var(--color-blue-light);
     color: var(--color-navy);
 }
 
@@ -1364,15 +1378,6 @@ td select {
 }
 
 @media (max-width: 1100px) {
-    .dashboard-sidebar {
-        width: 220px;
-    }
-
-    .dashboard-main {
-        width: calc(100% - 220px);
-        margin-left: 220px;
-    }
-
     .summary-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1380,6 +1385,26 @@ td select {
     .dashboard-content-grid,
     .dashboard-bottom-grid {
         grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 850px) {
+    .dashboard-sidebar {
+        flex-wrap: wrap;
+        gap: 10px 16px;
+    }
+
+    .sidebar-nav {
+        flex: 1 1 100%;
+        justify-content: flex-start;
+    }
+
+    .topbar-profile {
+        order: 1;
+    }
+
+    .sidebar-nav {
+        order: 2;
     }
 }
 
@@ -1395,7 +1420,7 @@ td select {
     }
 
     .sidebar-brand {
-        padding: 0 2px 13px;
+        padding: 0 2px;
     }
 
     .sidebar-logo {
@@ -1431,28 +1456,15 @@ td select {
         width: auto;
     }
 
-    .sidebar-logout {
-        display: none;
-    }
-
     .dashboard-main {
         width: 100%;
         min-height: auto;
         margin-left: 0;
     }
 
-    .dashboard-topbar {
-        min-height: 60px;
-        padding: 11px 18px;
-    }
-
     .topbar-user {
         gap: 8px;
         font-size: .82rem;
-    }
-
-    .topbar-user a {
-        margin-left: 2px;
     }
 
     .container.dashboard-container {
@@ -1493,10 +1505,6 @@ td select {
 
     .trend-chart {
         gap: 5px;
-    }
-
-    .topbar-user a {
-        font-size: .78rem;
     }
 
     .topbar-username {

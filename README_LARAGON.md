@@ -1,30 +1,8 @@
-# Revised Student Attendance System — VS Code + Laragon
-
-This is the revised/final version of the COMSC 6 laboratory activity.
-
-## Important
-
-The original laboratory procedure asks students to test the shabby version before revising it. This ZIP is intentionally the revised version so you can compare the two implementations directly.
-
-## Installation in Laragon
-
-1. Extract this folder into:
-
-   C:\laragon\www\
-
-2. Rename the extracted folder to:
-
-   attendance_system
-
-3. Start Apache and MySQL in Laragon.
-
-4. Import `database.sql` into MariaDB/MySQL.
-
-5. Open:
+Open:
 
    http://localhost/attendance_system/
 
-6. Login:
+Login:
 
    Username: admin
    Password: admin123
@@ -52,7 +30,3 @@ The original laboratory procedure asks students to test the shabby version befor
 - Delete requires browser confirmation.
 - Logout clears the session and session cookie.
 - Responsive layout and accessible labels/buttons are included.
-
-## Note about the seed password
-
-The `database.sql` file contains a bcrypt password hash for the laboratory password `admin123`, so the final application can use password_verify() without storing the plaintext password.

@@ -35,7 +35,11 @@ if (strpos($scriptPath, '/students/') !== false) {
             <span aria-hidden="true">▤</span>Reports
         </a>
     </nav>
-    <a class="sidebar-logout" href="<?= BASE_URL ?>/logout.php">
-        <span aria-hidden="true">↪</span>Logout
-    </a>
+    <details class="topbar-profile">
+        <summary class="topbar-user">
+            <span class="user-avatar" aria-hidden="true"><?= htmlspecialchars(strtoupper(substr($_SESSION['username'] ?? 'A', 0, 1))) ?></span>
+            <span class="topbar-username"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></span>
+        </summary>
+        <a class="profile-menu-logout" href="<?= BASE_URL ?>/logout.php">Logout</a>
+    </details>
 </aside>

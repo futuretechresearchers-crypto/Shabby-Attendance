@@ -628,6 +628,20 @@ td select {
     letter-spacing: .01em;
 }
 
+.version-label {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--color-blue-light);
+    color: var(--color-blue);
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.version-switch { margin-top: 20px; font-size: .9rem; }
+.actions form { display: inline; }
+
 @media (max-width: 760px) {
     .login-card {
         grid-template-columns: 1fr;

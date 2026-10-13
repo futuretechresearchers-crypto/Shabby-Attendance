@@ -1,4 +1,5 @@
 <?php
+session_name('attendance_revised');
 session_start();
 require_once __DIR__ . "/config/database.php";
 
@@ -72,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </section>
 
     <section class="login-content" aria-labelledby="login-heading">
+        <p class="version-label">Revised Version</p>
         <h2 id="login-heading">Administrator sign in</h2>
         <p>Enter your account details to continue.</p>
 
@@ -88,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <button class="button primary full" type="submit">Log in</button>
         </form>
+        <p class="version-switch"><a href="<?= BASE_URL ?>/unrevised/login.php">Switch to Unrevised System</a></p>
     </section>
 </div>
 </body>

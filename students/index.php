@@ -105,11 +105,11 @@ require_once __DIR__ . "/../includes/header.php";
     <td><?= htmlspecialchars($row['course']) ?></td>
     <td class="actions">
         <a class="button small" href="edit.php?id=<?= (int)$row['id'] ?>">Edit</a>
-        <a class="button small danger"
-           href="delete.php?id=<?= (int)$row['id'] ?>"
-           onclick="return confirm('Delete this student? This action cannot be undone.');">
-           Delete
-        </a>
+        <form method="POST" action="delete.php" onsubmit="return confirm('Delete this student and its attendance history? This action cannot be undone.');">
+           <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken()) ?>">
+           <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
+           <button class="button small danger" type="submit">Delete</button>
+        </form>
     </td>
 </tr>
 <?php endwhile; ?>

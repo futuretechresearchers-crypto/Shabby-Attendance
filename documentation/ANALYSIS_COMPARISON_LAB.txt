@@ -1,0 +1,88 @@
+COMSC 6 SOFTWARE ENGINEERING LABORATORY
+Revising a Shabby Student Attendance System — From “It Works” to “It’s Good Software”
+
+I. INTRODUCTION
+The laboratory compares a minimally functional attendance program with a revised program that improves acceptability, dependability/security, efficiency, and maintainability. A page that accepts data is not necessarily safe, understandable, reliable, or practical as records grow.
+
+II. PROJECT OVERVIEW
+The local original-style demo provides administrator login, dashboard navigation, student listing/add/delete, attendance entry, report, and logout. It uses prefixed `unrevised_*` tables and a separate PHP session. The existing revised project is maintained at the repository root and includes a richer dashboard, student create/edit/search/pagination, attendance recording, filtered report, reusable layout, and responsive CSS.
+
+III. PROBLEM ANALYSIS
+The left side below describes verified properties of the included classroom demo source. The right side records the revised implementation now present.
+
+# | Problem Found | Quality Characteristic Violated | Evidence | Proposed Solution / Revised Evidence
+1 | Demo stores the sample admin password as plaintext and compares it directly. | Security | unrevised/login.php; database/unrevised_setup.sql | Revised login uses password_verify against users.password in login.php.
+2 | Demo inserts username/password into SQL text. | Security | unrevised/login.php `$sql` concatenation | Revised login binds username with mysqli prepared statement.
+3 | Demo student creation concatenates all submitted fields into SQL. | Security/reliability | unrevised/add_student.php | Revised students/create.php uses a prepared INSERT and field-length checks.
+4 | Demo deletion is a destructive GET request without confirmation or CSRF. | Security/acceptability | unrevised/students.php and unrevised/delete_student.php | Revised students/index.php posts a confirmation form and CSRF token; students/delete.php validates token and ID.
+5 | Demo output prints database fields directly into HTML. | Security | unrevised/students.php, unrevised/report.php | Revised pages consistently apply htmlspecialchars to displayed values.
+6 | Demo has no field validation before insert. | Dependability/acceptability | unrevised/add_student.php | Revised students/create.php checks required fields and lengths server-side.
+7 | Demo uses no duplicate attendance protection or transaction. | Dependability | unrevised/save_attendance.php; demo schema has no unique key | Revised attendance save is transactional and uses the student/date unique key when present.
+8 | Demo attendance report uses comma join syntax and reads all rows. | Efficiency | unrevised/report.php | Revised reports/attendance.php uses explicit INNER JOIN and 25-row pagination.
+9 | Demo's seed schema and app tables are prefixed but do not enforce referential integrity. | Dependability | database/unrevised_setup.sql | Revised historic schema includes an FK cascade (database.sql history); live DB constraint state is not verified.
+10 | Demo lacks status allow-list/date validation and database error feedback. | Dependability/acceptability | unrevised/save_attendance.php | Revised attendance/save.php validates date/status/IDs, checks query results, rolls back failures and uses a user-safe message.
+11 | Original-style screen uses plain layout with no responsive rules. | Acceptability | unrevised/style.css | Revised css/style.css has responsive layouts and consistent components.
+12 | Demo repeats access checks and does not regenerate its session after login. | Security/maintainability | unrevised PHP routes; unrevised/login.php | Revised includes/auth.php centralizes route protection; login.php regenerates session ID.
+
+IV. ACCEPTABILITY ANALYSIS
+The demo retains simple blue headings, buttons, tables, and navigation. Revised pages share a sidebar/header, labeled forms, required markers, clear feedback, responsive styling, improved tables, student search, date formatting, and confirmation before student deletion. The revised login displays a version label and a working switch link.
+
+V. DEPENDABILITY AND SECURITY
+Revised authentication uses a prepared username lookup and password_verify, then regenerates the session ID. Protected pages call requireLogin. Revised writes use prepared statements; attendance validates dates/status/positive IDs and runs in a transaction. Revised deletion is POST-only and checks a session CSRF token. Outputs are escaped. Database connection failure is logged and shown as a generic message. Referential integrity depends on the live attendance foreign key; it could not be inspected in this session.
+
+VI. EFFICIENCY
+The revised student list uses selected columns, server-side search, and pagination. The attendance report filters and paginates 25 records and uses explicit INNER JOIN. The existing schema script described indexes for student number/name and attendance date/student/student-date, but exact live indexes and query plans were not available. No benchmark or EXPLAIN result is claimed.
+
+VII. MAINTAINABILITY
+The revised project separates configuration, authentication/layout includes, students, attendance, reports, and CSS. CSRF helpers are centralized with authentication. Routes use named files and prepared writes. The existing dashboard and student editing functionality were preserved. The demo remains separate for teaching comparison, with a separate session namespace and table prefix.
+
+VIII. BEFORE-AND-AFTER TESTING RESULTS
+
+Test case | Before result | After result | Status | Evidence / notes
+Valid login | Original demo opened dashboard for sample admin | Revised login opened dashboard and verified the existing bcrypt hash | PASS | HTTP POST smoke check; credential omitted
+Invalid login | Original returned “Invalid login” for bad credentials | Revised rejection branch not separately submitted | PARTIAL / NOT TESTED | Original HTTP POST observed; revised login source reviewed
+Add valid student | Not tested | Not tested | NOT TESTED | No student rows changed
+Reject empty student fields | Original source inserts without validation | Revised returned required-field validation messages | PASS (revised) | HTTP POST with empty values; no row inserted
+Record attendance | Not tested | Not tested | NOT TESTED | No attendance writes made
+Duplicate attendance | Source permits attempts without database safeguard | Revised DB unique key exists; duplicate flow not submitted | NOT TESTED | Key verified in schema
+Attendance report | Original route source reviewed; no browser capture | Revised report returned HTTP 200 and used pagination query | PASS (revised route) | HTTP GET; dataset below one page
+Delete student | Source review shows original GET delete; not invoked | Revised POST/CSRF transaction source reviewed; not invoked | NOT TESTED | Avoided destructive student operation
+Logout and protected route | Original logout returned login and dashboard redirected to login | Revised behavior not separately tested | PASS (original) | HTTP session smoke check
+Password hash verification | Original compares plaintext | Existing revised bcrypt password accepted by password_verify | PASS (revised) | Verified by successful login and hash metadata
+Prepared statements | Original SQL concatenation confirmed in source | Revised source uses prepared login/write statements | SOURCE REVIEW ONLY | No injection submission attempted
+CSRF rejection | Original source has no token | Revised attendance POST without token redirected with error | PASS (revised) | HTTP POST; no DB write
+Invalid status/date/ID | Original source has no server validation | Revised validation source reviewed; invalid variants not submitted | NOT TESTED |
+SQL error handling | Original output behavior source reviewed | Revised generic error handling source reviewed | SOURCE REVIEW ONLY | No induced SQL failure
+Delete related rows | No integrity behavior in demo | Revised transaction deletes only selected student's related rows | SOURCE REVIEW ONLY | No destructive test; two historical orphans remain
+Search and pagination | No search/page in demo | Revised student list, report and attendance pages returned HTTP 200 | PARTIAL | List/report query route smoke checks; page boundaries not reached
+Responsive/accessibility | Original stylesheet has no responsive rules | Revised CSS/form semantics reviewed | NOT TESTED | No visual/browser audit
+Version isolation | Separate app session state in source | Authenticated session in one version did not open the other dashboard | PASS | HTTP cookie/session smoke check
+Database isolation | Demo setup source uses prefixes | Live counts show demo 1/5/0, revised 1/9/47 | PASS | MySQL counts after idempotent setup
+Schema migration | Original SQL was destructive | Safe revised migration reran twice; counts preserved | PASS | MySQL 8.4.3; orphan IDs 76 and 77 reported
+PHP lint | Not applicable to absent starter | All PHP files passed PHP 8.3.30 lint | PASS | Command results in documentation/TEST_RESULTS.txt
+Query plan | Implicit join and no pagination in demo | Revised EXPLAIN used unique_student_date; student side scanned 10 rows and filesorted | PASS (plan observed) | No performance benchmark claimed
+
+This table reports observed results and source-review evidence separately. The complete test matrix and screenshot checklist are in documentation/TEST_RESULTS.txt. The full CRUD, visual, accessibility, and validation suite remains incomplete.
+
+IX. DATABASE IMPROVEMENTS
+The demo gets separate `unrevised_users`, `unrevised_students`, and `unrevised_attendance` tables, seeded idempotently with the sample people. Its schema intentionally models weak original behavior. The revised migration checks duplicates and adds missing safe keys/column constraints idempotently. The live schema has a unique username key, unique student number/date keys, and ENUM attendance status. There is no FK: two orphan records were found and preserved. The old root database.sql contained DROP TABLE commands and was replaced by a non-destructive notice.
+
+X. FEATURE COMPARISON
+Original requirements retained in the demo: admin login/logout, dashboard links, student list/add/delete, attendance entry/save, and attendance report. Revised existing features preserved: dashboard trends/summary/recent activity, student edit/search/pagination, attendance filters, and responsive layout. Added for this comparison: version routes, separate sessions and database namespaces, demo-only warning, CSRF deletion/attendance writes, and report pagination.
+
+XI. REFLECTION QUESTIONS
+Is the interface understandable? The simple demo's labels and navigation are visible, but feedback and validation are sparse. Revised navigation is shared and consistent.
+Are labels and navigation consistent? Revised pages reuse the same shell; the demo uses a small static navigation row.
+Does the application prevent accidental deletion? Demo does not. Revised deletion asks for confirmation and uses a POST form.
+Does it give meaningful feedback? Revised create, attendance, and delete flows use messages; database failures are generalized. Runtime observation is pending.
+Why is plaintext password storage unsafe? A table disclosure immediately reveals usable credentials, including reused passwords. Hashing with password_hash/password_verify reduces that exposure.
+Why are prepared statements necessary? They keep user-supplied values separate from SQL syntax and prevent input from changing query structure.
+Why does duplicated authentication code reduce maintainability? Each copy can drift, leaving a route unprotected or behaving differently when policy changes.
+How do indexing and pagination help growth? Indexes can reduce lookup work for matching access patterns; pagination caps rows rendered and transferred at a time. Actual benefit depends on schema, data, and query plan.
+Why is “merely works” insufficient? Correctness of one happy-path action says little about security, data integrity, usability, performance at scale, or the ability to change the system safely.
+
+XII. CONCLUSION
+Source changes improve the revised version's interface consistency, feedback, access control, request validation, CSRF protection, and report scalability. Database guarantees must still be checked against the actual local database before claiming complete integrity.
+
+XIII. EVIDENCE AND LIMITATIONS
+Verified facts: local checkout began on branch main at 560b734, configured origin is the requested GitHub URL, revised source is rooted in the current project, and old database.sql contained destructive drops. Remote network inspection failed. The attached 19-page PDF was not supplied in the accessible attachment; only the master prompt was available. MySQL 8.4.3 schema/records and PHP 8.3.30 were inspected. Selected route, demo login/logout, session isolation, lint, duplicate checks, migration rerun, and EXPLAIN checks were executed as recorded in TEST_RESULTS.txt. Full application tests and screenshots remain unverified.

@@ -10,6 +10,9 @@ $lastName = "";
 $course = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!validateCsrfToken($_POST['csrf_token'] ?? null)) {
+        $errors[] = "The form could not be verified. Please reload it and try again.";
+    }
     $studentNumber = trim($_POST['student_number'] ?? "");
     $firstName = trim($_POST['first_name'] ?? "");
     $lastName = trim($_POST['last_name'] ?? "");
@@ -74,6 +77,7 @@ require_once __DIR__ . "/../includes/header.php";
 <?php endif; ?>
 
 <form class="form-card" method="POST" novalidate>
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken()) ?>">
     <label for="student_number">Student Number <span class="required">*</span></label>
     <input id="student_number" name="student_number" maxlength="30"
            value="<?= htmlspecialchars($studentNumber) ?>" required>

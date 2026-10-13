@@ -1,0 +1,2 @@
+<?php require_once __DIR__ . '/db.php'; if (!isset($_SESSION['admin'])) { header('Location: login.php'); exit(); } oldHeader('Dashboard'); ?>
+<h1>Dashboard</h1><p>Welcome, <?php echo $_SESSION['admin']; ?></p><ul><li><a href="students.php">View Students</a></li><li><a href="add_student.php">Add Student</a></li><li><a href="attendance.php">Record Attendance</a></li><li><a href="report.php">Attendance Report</a></li></ul><?php oldFooter(); ?>

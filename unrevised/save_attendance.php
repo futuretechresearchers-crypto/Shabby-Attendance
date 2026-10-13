@@ -1,0 +1,1 @@
+<?php require_once __DIR__ . '/db.php'; if (!isset($_SESSION['admin'])) { header('Location: login.php'); exit(); } $date=$_POST['date']; foreach(($_POST['status'] ?? []) as $id=>$status) { mysqli_query($conn, "INSERT INTO unrevised_attendance (student_id, attendance_date, status) VALUES ($id,'$date','$status')"); } header('Location: report.php'); exit();

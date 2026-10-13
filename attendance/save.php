@@ -8,6 +8,13 @@ $statuses = $_POST['status'] ?? [];
 
 $errors = [];
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !validateCsrfToken($_POST['csrf_token'] ?? null)) {
+    $_SESSION['attendance_message'] = "The request could not be verified. Please reload the form and try again.";
+    $_SESSION['attendance_message_type'] = "error";
+    header("Location: " . BASE_URL . "/attendance/index.php");
+    exit();
+}
+
 $dateObject = DateTime::createFromFormat('Y-m-d', $date);
 if ($date === "" || !$dateObject || $dateObject->format('Y-m-d') !== $date) {
     $errors[] = "Please provide a valid attendance date.";
@@ -21,7 +28,8 @@ if (!is_array($statuses) || !$statuses) {
 
 if (!$errors) {
     foreach ($statuses as $studentId => $status) {
-        if (!filter_var($studentId, FILTER_VALIDATE_INT) || !in_array($status, $allowedStatuses, true)) {
+        $validId = filter_var($studentId, FILTER_VALIDATE_INT);
+        if ($validId === false || $validId < 1 || !in_array($status, $allowedStatuses, true)) {
             $errors[] = "One or more attendance entries are invalid.";
             break;
         }
@@ -35,7 +43,42 @@ if ($errors) {
     exit();
 }
 
-mysqli_begin_transaction($conn);
+$studentIds = array_map('intval', array_keys($statuses));
+if (!mysqli_begin_transaction($conn)) {
+    error_log(mysqli_error($conn));
+    $_SESSION['attendance_message'] = "Attendance could not be saved. Please try again.";
+    $_SESSION['attendance_message_type'] = "error";
+    header("Location: " . BASE_URL . "/attendance/index.php");
+    exit();
+}
+
+$placeholders = implode(',', array_fill(0, count($studentIds), '?'));
+$studentCheck = mysqli_prepare($conn, "SELECT id FROM students WHERE id IN ($placeholders) FOR UPDATE");
+if (!$studentCheck) {
+    error_log(mysqli_error($conn));
+    mysqli_rollback($conn);
+    $_SESSION['attendance_message'] = "Attendance could not be saved. Please try again.";
+    $_SESSION['attendance_message_type'] = "error";
+    header("Location: " . BASE_URL . "/attendance/index.php");
+    exit();
+}
+mysqli_stmt_bind_param($studentCheck, str_repeat('i', count($studentIds)), ...$studentIds);
+$studentsExist = mysqli_stmt_execute($studentCheck);
+$foundStudentCount = 0;
+if ($studentsExist) {
+    $studentResult = mysqli_stmt_get_result($studentCheck);
+    while (mysqli_fetch_assoc($studentResult)) $foundStudentCount++;
+}
+mysqli_stmt_close($studentCheck);
+if (!$studentsExist || $foundStudentCount !== count($studentIds)) {
+    mysqli_rollback($conn);
+    $_SESSION['attendance_message'] = $studentsExist
+        ? "One or more selected students no longer exist. Please reload the form."
+        : "Attendance could not be saved. Please try again.";
+    $_SESSION['attendance_message_type'] = "error";
+    header("Location: " . BASE_URL . "/attendance/index.php");
+    exit();
+}
 
 $stmt = mysqli_prepare(
     $conn,
@@ -70,7 +113,14 @@ foreach ($statuses as $studentId => $status) {
 }
 
 mysqli_stmt_close($stmt);
-mysqli_commit($conn);
+if (!mysqli_commit($conn)) {
+    error_log(mysqli_error($conn));
+    mysqli_rollback($conn);
+    $_SESSION['attendance_message'] = "Attendance could not be saved. Please try again.";
+    $_SESSION['attendance_message_type'] = "error";
+    header("Location: " . BASE_URL . "/attendance/index.php");
+    exit();
+}
 
 $_SESSION['attendance_message'] = "Attendance saved successfully.";
 $_SESSION['attendance_message_type'] = "success";

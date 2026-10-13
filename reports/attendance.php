@@ -29,13 +29,26 @@ if ($date !== "") {
 }
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+$limit = 25;
+$page = max(1, (int)($_GET['page'] ?? 1));
+$offset = ($page - 1) * $limit;
+
+$countSql = "SELECT COUNT(*) AS total FROM attendance a INNER JOIN students s ON a.student_id = s.id $whereSql";
+$countStmt = mysqli_prepare($conn, $countSql);
+if (!$countStmt) { error_log(mysqli_error($conn)); die("Unable to load the attendance report."); }
+if ($types !== "") mysqli_stmt_bind_param($countStmt, $types, ...$params);
+mysqli_stmt_execute($countStmt);
+$totalRows = (int)mysqli_fetch_assoc(mysqli_stmt_get_result($countStmt))['total'];
+mysqli_stmt_close($countStmt);
+$totalPages = max(1, (int)ceil($totalRows / $limit));
 
 $sql = "SELECT a.id, a.attendance_date, a.status,
                s.student_number, s.first_name, s.last_name
         FROM attendance a
         INNER JOIN students s ON a.student_id = s.id
         $whereSql
-        ORDER BY a.attendance_date DESC, s.last_name, s.first_name";
+        ORDER BY a.attendance_date DESC, s.last_name, s.first_name
+        LIMIT ? OFFSET ?";
 
 $stmt = mysqli_prepare($conn, $sql);
 
@@ -45,7 +58,11 @@ if (!$stmt) {
 }
 
 if ($types !== "") {
-    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    $bindTypes = $types . 'ii';
+    $bindValues = array_merge($params, [$limit, $offset]);
+    mysqli_stmt_bind_param($stmt, $bindTypes, ...$bindValues);
+} else {
+    mysqli_stmt_bind_param($stmt, 'ii', $limit, $offset);
 }
 
 mysqli_stmt_execute($stmt);
@@ -105,4 +122,11 @@ require_once __DIR__ . "/../includes/header.php";
 </tbody>
 </table>
 </div>
+<?php if ($totalPages > 1): ?>
+<nav class="pagination" aria-label="Attendance report pages">
+<?php for ($p = 1; $p <= $totalPages; $p++): ?>
+ <a class="<?= $p === $page ? 'active' : '' ?>" href="?<?= htmlspecialchars(http_build_query(['search' => $search, 'date' => $date, 'page' => $p])) ?>" <?= $p === $page ? 'aria-current="page"' : '' ?>><?= $p ?></a>
+<?php endfor; ?>
+</nav>
+<?php endif; ?>
 <?php require_once __DIR__ . "/../includes/footer.php"; ?>

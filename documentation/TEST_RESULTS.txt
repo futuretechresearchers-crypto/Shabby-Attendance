@@ -1,0 +1,46 @@
+COMSC 6 ATTENDANCE SYSTEM — TEST PLAN AND RESULTS
+
+Current result summary: Selected smoke checks passed; full CRUD/security/UI suite is still incomplete. Laragon Apache and MySQL were reachable. PHP lint passed for all PHP files. No browser screenshot was captured.
+
+Environment checklist
+- Start Laragon Apache and MySQL.
+- Back up school_attendance before migration work.
+- Import database/unrevised_setup.sql only after selecting the existing database.
+- Run the revised duplicate/schema inspection queries and record output.
+- PHP lint all PHP files with Laragon PHP binary (completed: PHP 8.3.30, all passed).
+- MySQL inspection and revised migration rerun twice (completed: two orphan rows reported and preserved).
+
+Manual matrix (record actual result and evidence filename)
+Case | Version | Expected behavior | Status | Evidence / notes
+Valid admin login | Original | admin/admin123 opens dashboard | PASS | HTTP POST reached dashboard.php
+Valid admin login | Revised | Existing revised account opens dashboard | PASS | HTTP POST reached dashboard.php; credential omitted from report
+Invalid admin login | Original | Rejects invalid credentials | PASS | HTTP POST returned login with “Invalid login”
+Add valid student | Both | New row appears | NOT TESTED |
+Empty student number/name/course | Original and revised | Original weakness observed; revised rejects each field | NOT TESTED |
+Record attendance | Both | Report reflects submission | NOT TESTED |
+Duplicate student/date | Both | Original can duplicate; revised unique DB key prevents duplicate | NOT TESTED | Confirm live key first
+View attendance report | Both | Report rows displayed | NOT TESTED |
+Delete student | Both | Original GET deletion; revised confirmation + POST + CSRF | NOT TESTED |
+Logout/direct dashboard | Original | Logout then protected dashboard redirects | PASS | logout returned login; protected dashboard redirected to login
+Duplicate student number | Revised | Clear rejection | NOT TESTED |
+Password hash/verify | Revised | Hash is verified, no plaintext in revised users | PASS | Existing password value was a bcrypt hash; successful login verified it
+Prepared statements | Revised | Login and data writes bind inputs | SOURCE REVIEW ONLY | No runtime injection test
+CSRF | Revised | Missing/invalid token rejected | NOT TESTED |
+Invalid attendance status/date/student ID | Revised | Rejected without partial writes | NOT TESTED |
+SQL error handling | Revised | Safe generic message, detail logged | NOT TESTED |
+Delete related records | Revised | Remove selected student's related attendance atomically | SOURCE REVIEW ONLY | No FK exists; delete code now uses a transaction and prepared deletes
+Student search/pagination | Revised | Filters and pages work | NOT TESTED |
+Report search/pagination | Revised | Filters and pages work | NOT TESTED |
+Responsive/accessibility | Revised | Controls usable at mobile width and labels associated | NOT TESTED |
+Version switching/session isolation | Both | Switch works; auth does not cross versions | PASS | Requested routes returned HTTP 200; separately authenticated sessions did not grant cross-version access
+Database isolation | Both | Prefix tables vs revised tables | PASS | DB counts: unrevised 1/5/0; revised 1/9/47
+Report query plan | Revised | Indexed attendance lookup | PASS | EXPLAIN used unique_student_date; student side scanned 10 rows and filesorted
+Demo stylesheet | Original | CSS loads | PASS | HTTP 200
+
+Screenshot checklist — save genuine captures under documentation/evidence/
+01-original-login.png; 02-original-dashboard.png; 03-original-students.png; 04-original-attendance.png; 05-original-report.png; 06-revised-login.png; 07-revised-dashboard.png; 08-revised-students.png; 09-revised-validation-error.png; 10-revised-success-message.png; 11-revised-delete-confirmation.png; 12-revised-attendance.png; 13-revised-report.png; 14-revised-CSRF-or-auth-check.png; 15-version-switch.png.
+
+Automated checks
+- PHP lint: PASS for all 30 PHP files using Laragon PHP 8.3.30.
+- Database: PASS for duplicate checks, prefixed setup script, and revised migration applied twice. Existing record totals were preserved; two legacy orphan rows remain.
+- HTTP route checks: PASS for the three requested URL paths, both login behaviors, session separation, and the demo stylesheet. Visual checks and screenshots were not run.

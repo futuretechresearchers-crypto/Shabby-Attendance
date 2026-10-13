@@ -36,6 +36,7 @@ require_once __DIR__ . "/../includes/header.php";
 <?php endif; ?>
 
 <form method="POST" action="save.php" class="form-card" novalidate>
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken()) ?>">
     <label for="attendance_date">Attendance Date <span class="required">*</span></label>
     <input id="attendance_date" type="date" name="attendance_date"
            value="<?= htmlspecialchars(date('Y-m-d')) ?>" required>

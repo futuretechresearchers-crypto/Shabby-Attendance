@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+*.log
+*.sql.bak
+*.dump
+*.backup
+database/backups/
+documentation/evidence/*.png
+documentation/evidence/*.jpg
+documentation/evidence/*.jpeg

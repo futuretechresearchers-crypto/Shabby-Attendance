@@ -1,0 +1,13 @@
+IMPLEMENTATION SUMMARY
+
+- Kept the existing root revised application and its dashboard, student editing/search, attendance, report filtering, and responsive styles.
+- Added an original-style application under unrevised/, with its own PHP session and prefixed database tables. It intentionally retains weak patterns for local classroom comparison and returns 404 to non-loopback clients.
+- Made the project root enter the unrevised login. Added revised/unrevised switch links and version labels.
+- Added a safe demo setup SQL and replaced the former destructive database.sql with a harmless notice.
+- Added CSRF tokens to revised student writes, revised POST-only deletion with confirmation, and transactional attendance deletion tied only to the selected student.
+- Added report pagination and shared CSRF helpers.
+- Inspected the existing school_attendance database read-only before changes. Preserved all records. Existing unique student-number and student/date keys were already present. Added unique username; widened users.password; changed attendance.status to the allowed ENUM.
+- Found two orphan attendance rows (IDs 76 and 77). Preserved them and did not add a foreign key. Revised deletion performs explicit transactional cleanup for future deletion requests.
+- PHP 8.3.30 lint passed for every PHP file. MySQL 8.4.3 schema/record checks and a report EXPLAIN completed. HTTP GET route checks returned 200 for the three requested URLs.
+- GitHub remote inspection/push could not reach github.com from this environment. No commit or push has been made.
+- The requested PDF was not present in the accessible attachment, so exact PDF comparison and starter seed validation are incomplete. No screenshots or full interactive form test results are claimed.

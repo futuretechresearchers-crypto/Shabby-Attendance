@@ -1,4 +1,5 @@
 <?php
+session_name('attendance_revised');
 session_start();
 $_SESSION = [];
 
